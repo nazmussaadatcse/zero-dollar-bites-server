@@ -41,6 +41,13 @@ async function run() {
             res.send(result);
         })
 
+        // read data from db 
+        app.get('/food', async (req, res) => {
+            const cursor = foodCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
     
 
 
