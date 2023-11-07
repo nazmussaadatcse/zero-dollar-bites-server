@@ -48,6 +48,11 @@ async function run() {
             const result = await requestCollection.insertOne(requestedFood);
             res.send(result);
         })
+        app.get('/requested', async (req, res) => {
+            console.log(requestedFood);
+            const result = await requestCollection.find().toArray();
+            res.send(result);
+        })
 
         // read data from db 
         app.get('/food', async (req, res) => {
