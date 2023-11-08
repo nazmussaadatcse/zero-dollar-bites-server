@@ -49,8 +49,8 @@ async function run() {
             res.send(result);
         })
         app.get('/requested', async (req, res) => {
-            console.log(requestedFood);
-            const result = await requestCollection.find().toArray;
+            const cursor = requestCollection.find();
+            const result = await cursor.toArray();
             res.send(result);
         })
 
@@ -70,6 +70,19 @@ async function run() {
             }
             console.log(query);
             const result = await foodCollection.deleteOne(query);
+            console.log(result);
+            res.send(result);
+        })
+        
+        app.delete('/requested/:id', async (req, res) => {
+            const id = req.params.id;
+            const email = req.query.email;
+            const query = {
+                _id: new ObjectId(id),
+                requesterEmail: email
+            }
+            console.log(query);
+            const result = await requestCollection.deleteOne(query);
             console.log(result);
             res.send(result);
         })
