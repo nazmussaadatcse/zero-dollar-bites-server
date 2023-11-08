@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 // middleware
 app.use(cors({
@@ -50,7 +50,7 @@ async function run() {
         })
         app.get('/requested', async (req, res) => {
             console.log(requestedFood);
-            const result = await requestCollection.find().toArray();
+            const result = await requestCollection.find().toArray;
             res.send(result);
         })
 
@@ -58,6 +58,19 @@ async function run() {
         app.get('/food', async (req, res) => {
             const cursor = foodCollection.find();
             const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.delete('/food/:id', async (req, res) => {
+            const id = req.params.id;
+            const email = req.query.email;
+            const query = {
+                _id: new ObjectId(id),
+                email: email
+            }
+            console.log(query);
+            const result = await foodCollection.deleteOne(query);
+            console.log(result);
             res.send(result);
         })
 
