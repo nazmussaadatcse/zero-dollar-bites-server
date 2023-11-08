@@ -29,6 +29,25 @@ const client = new MongoClient(uri, {
     }
 });
 
+const verifyToken = (req, res, next) => {
+    const token = req?.cookies?.token;
+    console.log('token in middleware', token);
+
+
+    if (token) {
+        jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
+            if (err || (decoded.exp * 1000) < Date.now()) { // Check if the token is expired
+                return res.status(401).send({ message: 'unauthorized access' });
+            }
+            req.user = decoded;
+            next();
+        })
+    }
+    // if (!token) {
+    //     return res.status(401).send({ message: 'unauthorized access' })
+    // }
+}
+
 
 async function run() {
     try {
@@ -40,7 +59,7 @@ async function run() {
         const deliveredCollection = client.db('ZDB_foodDB').collection('delivered');
 
         // create data on db 
-        app.post('/food', async (req, res) => {
+        app.post('/food', verifyToken, async (req, res) => {
             const newFood = req.body;
             console.log(newFood);
             const result = await foodCollection.insertOne(newFood);
@@ -66,7 +85,7 @@ async function run() {
 
         })
 
-        app.post('/requested', async (req, res) => {
+        app.post('/requested',verifyToken, async (req, res) => {
             const requestedFood = req.body;
             console.log(requestedFood);
             const result = await requestCollection.insertOne(requestedFood);
@@ -113,7 +132,7 @@ async function run() {
             res.json(food);
         });
 
-        app.put('/food/:id', async (req, res) => {
+        app.put('/food/:id', verifyToken, async (req, res) => {
             const id = req.params.id;
             const query = { 
                 _id: new ObjectId(id) 
