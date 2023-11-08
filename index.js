@@ -61,6 +61,16 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/food/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id)
+            }
+            const food = await foodCollection.findOne(query);
+            res.json(food);
+        });
+
+
         app.delete('/food/:id', async (req, res) => {
             const id = req.params.id;
             const email = req.query.email;
@@ -73,7 +83,7 @@ async function run() {
             console.log(result);
             res.send(result);
         })
-        
+
         app.delete('/requested/:id', async (req, res) => {
             const id = req.params.id;
             const email = req.query.email;
@@ -87,7 +97,7 @@ async function run() {
             res.send(result);
         })
 
-    
+
 
 
         // Send a ping to confirm a successful connection
