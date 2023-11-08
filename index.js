@@ -4,6 +4,8 @@ const app = express();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 // middleware
 app.use(cors({
     origin: [
@@ -12,6 +14,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser());
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.tjhl6td.mongodb.net/?retryWrites=true&w=majority`;
@@ -41,6 +44,25 @@ async function run() {
             console.log(newFood);
             const result = await foodCollection.insertOne(newFood);
             res.send(result);
+        })
+        app.post('/jwt', (req, res) => {
+            const user = req.body;
+            console.log('user for token', user);
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: '1h' });
+
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none'
+            });
+            res.send({ success: true });
+        })
+        
+        app.post('/logout', async (req, res) => {
+            const user = req.body;
+            console.log('logging out :', user);
+            res.clearCookie('token', { maxAge: 0 }).send({ success: true });
+
         })
 
         app.post('/requested', async (req, res) => {
