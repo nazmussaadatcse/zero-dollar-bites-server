@@ -69,6 +69,14 @@ async function run() {
             const food = await foodCollection.findOne(query);
             res.json(food);
         });
+        app.get('/requested/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id)
+            }
+            const food = await foodCollection.findOne(query);
+            res.json(food);
+        });
 
         app.put('/food/:id', async (req, res) => {
             const id = req.params.id;
