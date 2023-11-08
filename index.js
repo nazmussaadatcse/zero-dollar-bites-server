@@ -33,6 +33,7 @@ async function run() {
 
         const foodCollection = client.db('ZDB_foodDB').collection('food');
         const requestCollection = client.db('ZDB_foodDB').collection('request');
+        const deliveredCollection = client.db('ZDB_foodDB').collection('delivered');
 
         // create data on db 
         app.post('/food', async (req, res) => {
@@ -48,8 +49,19 @@ async function run() {
             const result = await requestCollection.insertOne(requestedFood);
             res.send(result);
         })
+        app.post('/delivered', async (req, res) => {
+            const deliveredFood = req.body;
+            console.log(deliveredFood);
+            const result = await deliveredCollection.insertOne(deliveredFood);
+            res.send(result);
+        })
         app.get('/requested', async (req, res) => {
             const cursor = requestCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+        app.get('/delivered', async (req, res) => {
+            const cursor = deliveredCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
@@ -120,6 +132,17 @@ async function run() {
             const query = {
                 _id: new ObjectId(id),
                 requesterEmail: email
+            }
+            console.log(query);
+            const result = await requestCollection.deleteOne(query);
+            console.log(result);
+            res.send(result);
+        })
+
+        app.delete('/requesttodeliver/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id),
             }
             console.log(query);
             const result = await requestCollection.deleteOne(query);
