@@ -10,7 +10,8 @@ const cookieParser = require('cookie-parser');
 app.use(cors({
     origin: [
         'https://zero-dollar-bites.web.app',
-        'https://zero-dollar-bites.firebaseapp.com'
+        'https://zero-dollar-bites.firebaseapp.com',
+        'https://whimsical-quokka-c54a71.netlify.app'
     ],
     credentials: true
 }));
@@ -181,7 +182,7 @@ async function run() {
             res.send(result);
         })
 
-        app.delete('/requesttodeliver/:id',verifyToken, async (req, res) => {
+        app.delete('/requesttodeliver/:id', async (req, res) => {
             const id = req.params.id;
             const query = {
                 _id: new ObjectId(id),
