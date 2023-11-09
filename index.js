@@ -9,8 +9,9 @@ const cookieParser = require('cookie-parser');
 // middleware
 app.use(cors({
     origin: [
-        'https://zero-dollar-bites.web.app',
-        'https://zero-dollar-bites.firebaseapp.com'
+        'http://localhost:5173'
+        // 'https://zero-dollar-bites.web.app',
+        // 'https://zero-dollar-bites.firebaseapp.com'
     ],
     credentials: true
 }));
@@ -59,7 +60,7 @@ async function run() {
         const deliveredCollection = client.db('ZDB_foodDB').collection('delivered');
 
         // create data on db 
-        app.post('/food', verifyToken, async (req, res) => {
+        app.post('/food', async (req, res) => {
             const newFood = req.body;
             console.log(newFood);
             const result = await foodCollection.insertOne(newFood);
@@ -85,7 +86,7 @@ async function run() {
 
         })
 
-        app.post('/requested',verifyToken, async (req, res) => {
+        app.post('/requested', async (req, res) => {
             const requestedFood = req.body;
             console.log(requestedFood);
             const result = await requestCollection.insertOne(requestedFood);
@@ -132,10 +133,10 @@ async function run() {
             res.json(food);
         });
 
-        app.put('/food/:id', verifyToken, async (req, res) => {
+        app.put('/food/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { 
-                _id: new ObjectId(id) 
+            const query = {
+                _id: new ObjectId(id)
             }
             const options = { upsert: true }
             const updatedFood = req.body;
