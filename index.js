@@ -9,9 +9,8 @@ const cookieParser = require('cookie-parser');
 // middleware
 app.use(cors({
     origin: [
-        'http://localhost:5173'
-        // 'https://zero-dollar-bites.web.app',
-        // 'https://zero-dollar-bites.firebaseapp.com'
+        'https://zero-dollar-bites.web.app',
+        'https://zero-dollar-bites.firebaseapp.com'
     ],
     credentials: true
 }));
