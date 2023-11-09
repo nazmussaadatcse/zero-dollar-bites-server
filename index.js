@@ -60,7 +60,7 @@ async function run() {
         const deliveredCollection = client.db('ZDB_foodDB').collection('delivered');
 
         // create data on db 
-        app.post('/food', async (req, res) => {
+        app.post('/food', verifyToken, async (req, res) => {
             const newFood = req.body;
             console.log(newFood);
             const result = await foodCollection.insertOne(newFood);
@@ -86,19 +86,19 @@ async function run() {
 
         })
 
-        app.post('/requested', async (req, res) => {
+        app.post('/requested', verifyToken, async (req, res) => {
             const requestedFood = req.body;
             console.log(requestedFood);
             const result = await requestCollection.insertOne(requestedFood);
             res.send(result);
         })
-        app.post('/delivered', async (req, res) => {
+        app.post('/delivered',verifyToken, async (req, res) => {
             const deliveredFood = req.body;
             console.log(deliveredFood);
             const result = await deliveredCollection.insertOne(deliveredFood);
             res.send(result);
         })
-        app.get('/requested', async (req, res) => {
+        app.get('/requested', verifyToken, async (req, res) => {
             const cursor = requestCollection.find();
             const result = await cursor.toArray();
             res.send(result);
@@ -116,7 +116,7 @@ async function run() {
             res.send(result);
         })
 
-        app.get('/food/:id', async (req, res) => {
+        app.get('/food/:id',verifyToken, async (req, res) => {
             const id = req.params.id;
             const query = {
                 _id: new ObjectId(id)
@@ -124,7 +124,7 @@ async function run() {
             const food = await foodCollection.findOne(query);
             res.json(food);
         });
-        app.get('/requested/:id', async (req, res) => {
+        app.get('/requested/:id',verifyToken, async (req, res) => {
             const id = req.params.id;
             const query = {
                 _id: new ObjectId(id)
@@ -133,14 +133,14 @@ async function run() {
             res.json(food);
         });
 
-        app.put('/food/:id', async (req, res) => {
+        app.put('/food/:id', verifyToken, async (req, res) => {
             const id = req.params.id;
             const query = {
                 _id: new ObjectId(id)
             }
             const options = { upsert: true }
             const updatedFood = req.body;
-            console.log(updatedFood);
+            // console.log(updatedFood);
             const food = {
                 $set: {
                     name: updatedFood.name,
@@ -156,7 +156,7 @@ async function run() {
         })
 
 
-        app.delete('/food/:id', async (req, res) => {
+        app.delete('/food/:id',verifyToken, async (req, res) => {
             const id = req.params.id;
             const email = req.query.email;
             const query = {
@@ -169,7 +169,7 @@ async function run() {
             res.send(result);
         })
 
-        app.delete('/requested/:id', async (req, res) => {
+        app.delete('/requested/:id', verifyToken, async (req, res) => {
             const id = req.params.id;
             const email = req.query.email;
             const query = {
@@ -182,7 +182,7 @@ async function run() {
             res.send(result);
         })
 
-        app.delete('/requesttodeliver/:id', async (req, res) => {
+        app.delete('/requesttodeliver/:id',verifyToken, async (req, res) => {
             const id = req.params.id;
             const query = {
                 _id: new ObjectId(id),
