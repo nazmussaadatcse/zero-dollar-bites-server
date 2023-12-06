@@ -11,7 +11,8 @@ app.use(cors({
     origin: [
         'https://zero-dollar-bites.web.app',
         'https://zero-dollar-bites.firebaseapp.com',
-        'https://whimsical-quokka-c54a71.netlify.app'
+        'https://silver-starship-696c68.netlify.app',
+        'http://localhost:5173'
     ],
     credentials: true
 }));
